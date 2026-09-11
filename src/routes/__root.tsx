@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppProvider } from "@/lib/store";
+import { registerPwa } from "@/lib/register-pwa";
 
 function NotFoundComponent() {
   return (
@@ -91,6 +92,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "AI-powered app for rural artisans and micro-businesses: catalogue, pricing, finance, marketing and a one-tap online store.",
       },
       { name: "theme-color", content: "#eef4fa" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "Kalaa Setu" },
       { property: "og:title", content: "Kalaa Setu — Digital business partner for rural artisans" },
       {
         property: "og:description",
@@ -108,7 +113,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap",
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -135,9 +141,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
+    registerPwa().catch(() => {});
   }, []);
 
   return (

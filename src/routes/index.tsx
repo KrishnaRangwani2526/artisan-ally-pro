@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, Check, Mic, Camera, Upload } from "lucide-react";
+import { ArrowRight, Check, Mic, Camera, Upload, ChevronLeft } from "lucide-react";
 import { useApp } from "@/lib/store";
 import { LANGUAGES } from "@/lib/i18n";
 import { CATEGORIES } from "@/lib/demo-data";
@@ -58,13 +58,23 @@ function Onboarding() {
     <div className="page-glow min-h-screen bg-background text-foreground">
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-10">
         {step > 0 ? (
-          <div className="flex items-center gap-1.5 pt-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <span
-                key={i}
-                className={cn("h-1.5 flex-1 rounded-full", i <= step ? "bg-primary" : "bg-surface-2")}
-              />
-            ))}
+          <div className="app-safe-top flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setStep((current) => Math.max(0, current - 1))}
+              className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-primary ring-1 ring-line transition-transform active:scale-95"
+              aria-label="Go back"
+            >
+              <ChevronLeft className="size-6" strokeWidth={2.5} />
+            </button>
+            <div className="flex flex-1 items-center gap-1.5">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <span
+                  key={i}
+                  className={cn("h-1.5 flex-1 rounded-full", i <= step ? "bg-primary" : "bg-surface-2")}
+                />
+              ))}
+            </div>
           </div>
         ) : null}
 

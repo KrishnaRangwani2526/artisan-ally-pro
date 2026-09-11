@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   Home,
   Package,
@@ -25,6 +25,7 @@ import {
   Mic,
   Send,
   X,
+  ChevronLeft,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -60,6 +61,7 @@ const MAIN_LINKS = [
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const { state, update } = useApp();
   const { online, syncing } = useOnline();
   const [moreOpen, setMoreOpen] = useState(false);
@@ -70,6 +72,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   const langInfo = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0]!;
 
   const isActive = (to: string) => pathname === to || pathname.startsWith(to + "/");
+  const showBack = pathname !== "/dashboard";
+
+  const goBack = () => {
+    if (window.history.length > 1) {
+      router.history.back();
+      return;
+    }
+    router.navigate({ to: "/dashboard" });
+  };
 
   return (
     <div
@@ -108,8 +119,19 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <div className="flex min-h-screen w-full flex-col lg:px-8">
           {/* Header */}
-          <header className="sticky top-0 z-30 flex items-center justify-between gap-3 bg-background/80 px-5 pt-5 pb-4 backdrop-blur-xl lg:px-0">
-            <Link to="/business" className="flex items-center gap-3">
+          <header className="app-safe-top sticky top-0 z-30 flex items-center justify-between gap-3 bg-background/80 px-5 pb-4 backdrop-blur-xl lg:px-0">
+            <div className="flex min-w-0 items-center gap-2">
+              {showBack ? (
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-primary ring-1 ring-line transition-transform active:scale-95 lg:hidden"
+                  aria-label="Go back"
+                >
+                  <ChevronLeft className="size-6" strokeWidth={2.5} />
+                </button>
+              ) : null}
+              <Link to="/business" className="flex min-w-0 items-center gap-3">
               <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-surface-2 font-mono text-[15px] font-bold text-primary ring-1 ring-line">
                 {state.business.name.slice(0, 1)}
                 {state.business.name.split(" ").at(-1)?.slice(0, 1) ?? ""}
@@ -122,7 +144,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {state.business.name}
                 </span>
               </span>
-            </Link>
+              </Link>
+            </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setLangOpen(true)}
@@ -158,7 +181,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <main className="flex-1 space-y-5 px-5 pb-32 lg:px-0 lg:pb-16">{children}</main>
 
           {/* Mobile bottom nav */}
-          <nav className="sticky bottom-0 z-30 px-4 pb-5 lg:hidden">
+          <nav className="app-safe-bottom sticky bottom-0 z-30 px-4 lg:hidden">
             <div className="frost-card relative flex items-end justify-between px-2 py-2">
               <NavItem to="/dashboard" label={t(lang, "home")} icon={Home} active={isActive("/dashboard")} />
               <NavItem to="/products" label={t(lang, "products")} icon={Package} active={isActive("/products")} />
