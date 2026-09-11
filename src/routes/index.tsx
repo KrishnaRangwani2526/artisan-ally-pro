@@ -7,6 +7,7 @@ import { CATEGORIES } from "@/lib/demo-data";
 import type { LangCode } from "@/lib/types";
 import { ActionButton, Field, inputClass, VoiceButton } from "@/components/ui-kit";
 import { cn } from "@/lib/utils";
+import { tr } from "@/lib/translate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,6 +48,7 @@ function Onboarding() {
   const [firstProduct, setFirstProduct] = useState({ name: "", note: "", photo: false });
 
   const set = (patch: Partial<typeof biz>) => setBiz((b) => ({ ...b, ...patch }));
+  const bi = (text: string) => <Bilingual text={text} lang={biz.language} />;
   const next = () => setStep((s) => s + 1);
 
   const finish = () => {
@@ -136,7 +138,7 @@ function Onboarding() {
         )}
 
         {step === 2 && (
-          <Step title="What kind of work do you do?" sub="Pick the closest one">
+          <Step title={bi("What kind of work do you do?")} sub={bi("Pick the closest one")}>
             <div className="grid grid-cols-2 gap-2.5">
               {BUSINESS_TYPES.map((typeName) => (
                 <button
@@ -144,18 +146,18 @@ function Onboarding() {
                   onClick={() => set({ type: typeName })}
                   className={cn("frost-tile p-4 text-left", biz.type === typeName && "ring-2 ring-primary")}
                 >
-                  <span className="text-[15px] font-semibold">{typeName}</span>
+                  <span className="text-[15px] font-semibold">{bi(typeName)}</span>
                 </button>
               ))}
             </div>
             <ActionButton onClick={next} className="mt-6 w-full">
-              Continue
+              {bi("Continue")}
             </ActionButton>
           </Step>
         )}
 
         {step === 3 && (
-          <Step title="Your business details" sub="We use these to find local buyers and schemes for you">
+          <Step title={bi("Your business details")} sub={bi("We use these to find local buyers and schemes for you")}>
             <div className="space-y-3">
               <VoiceButton
                 label="🎙️ Tell us about your business"
@@ -165,29 +167,30 @@ function Onboarding() {
               {biz.about ? (
                 <p className="frost-tile p-3 text-[13px] text-muted-foreground">{biz.about}</p>
               ) : null}
-              <Field label="Business name">
+              <span className="sr-only">{tr(biz.language, "Tell us about your business")}</span>
+              <Field label={bi("Business name")}>
                 <input className={inputClass} value={biz.name} onChange={(e) => set({ name: e.target.value })} />
               </Field>
-              <Field label="Owner name">
+              <Field label={bi("Owner name")}>
                 <input className={inputClass} value={biz.owner} onChange={(e) => set({ owner: e.target.value })} />
               </Field>
               <div className="grid grid-cols-2 gap-3">
-                <Field label="Village">
+                <Field label={bi("Village")}>
                   <input className={inputClass} value={biz.village} onChange={(e) => set({ village: e.target.value })} />
                 </Field>
-                <Field label="Block">
+                <Field label={bi("Block")}>
                   <input className={inputClass} value={biz.block} onChange={(e) => set({ block: e.target.value })} />
                 </Field>
-                <Field label="District">
+                <Field label={bi("District")}>
                   <input className={inputClass} value={biz.district} onChange={(e) => set({ district: e.target.value })} />
                 </Field>
-                <Field label="State">
+                <Field label={bi("State")}>
                   <input className={inputClass} value={biz.state} onChange={(e) => set({ state: e.target.value })} />
                 </Field>
-                <Field label="PIN code">
+                <Field label={bi("PIN code")}>
                   <input className={inputClass} value={biz.pin} onChange={(e) => set({ pin: e.target.value })} />
                 </Field>
-                <Field label="Category">
+                <Field label={bi("Category")}>
                   <select className={inputClass} value={biz.category} onChange={(e) => set({ category: e.target.value })}>
                     {CATEGORIES.map((c) => (
                       <option key={c}>{c}</option>
@@ -197,34 +200,34 @@ function Onboarding() {
               </div>
             </div>
             <ActionButton onClick={next} className="mt-6 w-full">
-              Continue
+              {bi("Continue")}
             </ActionButton>
           </Step>
         )}
 
         {step === 4 && (
-          <Step title="Add your first product" sub="A photo and a few words is enough — you can add more later">
+          <Step title={bi("Add your first product")} sub={bi("A photo and a few words is enough — you can add more later")}>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setFirstProduct((p) => ({ ...p, photo: true }))}
                 className="frost-tile flex flex-col items-center gap-2 p-6 text-[14px] font-semibold"
               >
-                <Camera className="size-6 text-primary" /> Take Photo
+                <Camera className="size-6 text-primary" /> {bi("Take Photo")}
               </button>
               <button
                 onClick={() => setFirstProduct((p) => ({ ...p, photo: true }))}
                 className="frost-tile flex flex-col items-center gap-2 p-6 text-[14px] font-semibold"
               >
-                <Upload className="size-6 text-primary" /> Upload Photo
+                <Upload className="size-6 text-primary" /> {bi("Upload Photo")}
               </button>
             </div>
             {firstProduct.photo ? (
               <p className="mt-3 rounded-2xl bg-good-soft px-4 py-2.5 text-[13px] font-semibold text-good">
-                <Check className="mr-1 inline size-4" /> Photo added — AI will clean it up for you later
+                 <Check className="mr-1 inline size-4" /> {bi("Photo added — AI will clean it up for you later")}
               </p>
             ) : null}
             <div className="mt-4 space-y-3">
-              <Field label="Product name">
+              <Field label={bi("Product name")}>
                 <input
                   className={inputClass}
                   placeholder="e.g. Handwoven cotton shawl"
@@ -242,16 +245,16 @@ function Onboarding() {
               ) : null}
             </div>
             <ActionButton onClick={next} className="mt-6 w-full">
-              Continue
+              {bi("Continue")}
             </ActionButton>
             <button onClick={next} className="mt-3 w-full text-[13px] font-semibold text-muted-foreground">
-              Skip for now
+              {bi("Skip for now")}
             </button>
           </Step>
         )}
 
         {step === 5 && (
-          <Step title="What do you want most?" sub="Choose as many as you like">
+          <Step title={bi("What do you want most?")} sub={bi("Choose as many as you like")}>
             <div className="space-y-2.5">
               {GOALS.map((g) => {
                 const on = goals.includes(g);
@@ -264,14 +267,14 @@ function Onboarding() {
                       on && "ring-2 ring-primary",
                     )}
                   >
-                    {g}
+                    {bi(g)}
                     {on ? <Check className="size-5 text-primary" /> : null}
                   </button>
                 );
               })}
             </div>
             <ActionButton onClick={next} className="mt-6 w-full">
-              Finish setup
+              {bi("Finish setup")}
             </ActionButton>
           </Step>
         )}
@@ -280,11 +283,11 @@ function Onboarding() {
           <div className="flex flex-1 flex-col justify-center py-12">
             <span className="grid size-16 place-items-center rounded-3xl bg-good-soft text-3xl">🎉</span>
             <h1 className="mt-6 text-[30px] leading-tight font-bold tracking-tight">
-              Your Digital Business is Ready!
+              {bi("Your Digital Business is Ready!")}
             </h1>
             <div className="frost-card mt-6 p-5">
               <p className="font-mono text-[11px] font-bold tracking-[0.14em] text-muted-foreground uppercase">
-                Your business profile
+                 {bi("Your business profile")}
               </p>
               <p className="mt-2 text-[20px] font-bold">{biz.name}</p>
               <p className="text-[13px] text-muted-foreground">
@@ -296,7 +299,7 @@ function Onboarding() {
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {goals.map((g) => (
                   <span key={g} className="rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-bold text-primary">
-                    {g}
+                    {bi(g)}
                   </span>
                 ))}
               </div>
@@ -305,10 +308,10 @@ function Onboarding() {
               </p>
             </div>
             <ActionButton onClick={finish} className="mt-6 w-full">
-              Open My Dashboard <ArrowRight className="ml-1 inline size-4" />
+              {bi("Open My Dashboard")} <ArrowRight className="ml-1 inline size-4" />
             </ActionButton>
             <p className="mt-3 flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground">
-              <Mic className="size-3.5" /> You can change any of this later by voice
+              <Mic className="size-3.5" /> {bi("You can change any of this later by voice")}
             </p>
           </div>
         )}
@@ -317,7 +320,12 @@ function Onboarding() {
   );
 }
 
-function Step({ title, sub, children }: { title: string; sub: string; children: React.ReactNode }) {
+function Bilingual({ text, lang }: { text: string; lang: LangCode }) {
+  const local = tr(lang, text);
+  return <>{text}{local ? <span className="mt-0.5 block text-[0.76em] leading-tight font-medium opacity-65">{local}</span> : null}</>;
+}
+
+function Step({ title, sub, children }: { title: React.ReactNode; sub: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="flex-1 pt-8">
       <h1 className="text-[26px] leading-tight font-bold tracking-tight">{title}</h1>
