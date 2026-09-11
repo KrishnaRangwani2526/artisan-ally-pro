@@ -256,8 +256,8 @@ export function Field({
   hint,
   children,
 }: {
-  label: string;
-  hint?: string;
+  label: ReactNode;
+  hint?: ReactNode;
   children: ReactNode;
 }) {
   return (
