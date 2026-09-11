@@ -20,7 +20,7 @@
 - Every button on every page must do something: navigate, calculate, change state or show Upcoming.
 
 ## Requested additions
-- [ ] iPhone-style back navigation on every non-home screen
-- [ ] Installable home-screen icons and mobile metadata
-- [ ] Safe offline support without preview caching
-- [ ] Mobile viewport verification
+- [x] iPhone-style back navigation on every non-home screen
+- [x] Installable home-screen icons and mobile metadata
+- [x] Safe offline support without preview caching
+- [x] Mobile viewport verification
